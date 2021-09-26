@@ -2,24 +2,8 @@ class Player {
   constructor() {
     this.name = null;
     this.index = null;
-    this.positionX = 0;
-    this.positionY = 0;
-  }
-
-  addPlayer() {
-    var playerIndex = "players/player" + this.index;
-
-    if (this.index === 1) {
-      this.positionX = width / 2 - 100;
-    } else {
-      this.positionX = width / 2 + 100;
-    }
-
-    database.ref(playerIndex).set({
-      name: this.name,
-      positionX: this.positionX,
-      positionY: this.positionY
-    });
+    this.distance = 0;
+    this.rank = null;
   }
 
   getCount() {
@@ -35,5 +19,25 @@ class Player {
     });
   }
 
-  static getPlayersInfo() {}
+  update(){
+    var playerIndex = "players/player" + this.index;
+    database.ref(playerIndex).set({
+      name : this.name,
+      distance : this.distance
+    })
+  }
+
+  static getPlayerInfo() {
+    var playerInfoRef = database.ref('players');
+    playerInfoRef.on("value", (data)=> {
+      allPlayers = data.val();
+    })
+  }
+
+  getCarsAtEnd(){
+    database.ref('CarsAtEnd').on("value", (data)=> {
+      this.rank = data.val();
+    })
+  }
+
 }
